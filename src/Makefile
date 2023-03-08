@@ -35,4 +35,3 @@ clean:
 # Compile
 $(TARGETDIR)/%.so: %.cc %.h
 	$(CC) $(CFLAGS) $(INCLUDE) $< -o $@
-

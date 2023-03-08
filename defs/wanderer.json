@@ -1,0 +1,25 @@
+{
+    "name": "Wanderer",
+    "type": "dynamic",
+    "description": "A Wandering Robot",
+    "shape": [
+        { "x": -40, "y": 40 },
+        { "x": 40, "y": 40 },
+        { "x": 40, "y": -40 },
+        { "x": -40, "y": -40 }
+    ],
+    "friction": {
+        "collision": 1,
+        "linear": 10,
+        "rotational": 200
+    },
+    "sensors": [
+        { 
+            "type": "range",
+            "location": { "x": 12, "y": 0 },
+            "direction": 0
+        }                      
+    ],
+    "mass": 0.25,
+    "controller": "lib/wanderer.so"
+}
