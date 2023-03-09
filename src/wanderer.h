@@ -100,7 +100,11 @@ namespace {
         void update() {
             damp_movement();
             track_velocity(velocity,0.15);
-            if (hit) {
+
+            if( x() > 399 || y() > 399 ) {
+                std::cout << "GAME OVER \n";
+                remove_agent(id());
+            } else if (hit) {
                 total_hits++;
 
                 int random_x = rand() % 701 - 350; 

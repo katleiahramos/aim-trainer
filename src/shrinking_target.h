@@ -35,6 +35,7 @@ class ShrinkingTargetController : public Process, public AgentInterface {
 
         // Shrink in size and remove
         if (counter > MAX_RADIUS ) {
+          std::cout << "GAME OVER \n";
           remove_agent(id());
         } else {
           set_style({{"r", MAX_RADIUS - counter}});
