@@ -78,6 +78,7 @@ namespace {
         }
 
         void update() {
+            damp_movement();
             track_velocity(10,0.15);
             if (hit) {
                 int random_x = rand() % 801 - 400; 
