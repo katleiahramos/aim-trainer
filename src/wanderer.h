@@ -66,7 +66,7 @@ namespace {
         // GAME LOGIC VARIABLES
         bool hit = false;
         int total_hits = 0;
-        int HITS_TILL_NEXT_PHASE = 5;
+        int HITS_TO_SPAWN_SHRINKING = 5;
 
         public:
         WandererController() : StateMachine() {

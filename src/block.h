@@ -10,8 +10,8 @@ class BlockController : public Process, public AgentInterface{
 
     // GAME LOGIC VARIABLES
     int total_hits;
-    int HITS_TILL_PHASE_1 = 3;
-    // int HITS_TILL_PHASE_2 = 5;
+    int HITS_TO_SPAWN_WANDERER = 3;
+    int HITS_TO_SPAWN_SHRINKING_TARGET = 5;
 
     public:
     BlockController() : Process(), AgentInterface(), total_hits(0){}
@@ -41,11 +41,10 @@ class BlockController : public Process, public AgentInterface{
             hit = false;
             // remove_agent(id());
 
-            if ( total_hits == HITS_TILL_PHASE_1 ) {
-                std::cout << "in if statement \n";
+            if ( total_hits == HITS_TO_SPAWN_SHRINKING_TARGET ) {
                 int random_x_wanderer = rand() % 801 - 400; 
                 int random_y_wanderer = rand() % 801 - 400; 
-                add_agent("Wanderer",random_x_wanderer,random_y_wanderer,0,{{"fill", "blue"}});
+                add_agent("ShrinkingTarget",random_x_wanderer,random_y_wanderer,0,{{"fill", "blue"}});
                 remove_agent(id());
             }
 

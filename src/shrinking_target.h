@@ -42,18 +42,26 @@ class ShrinkingTargetController : public Process, public AgentInterface {
         if( hit ) {
             int random_x = rand() % 801 - 400; 
             int random_y = rand() % 801 - 400; 
-            Agent& new_agent = add_agent(
-                "ShrinkingTarget",
-                random_x,
-                random_y,
-                0,
-                {
-                    {"fill", "green"},
-                    {"shape", "omni"},
-                    {"r", MAX_RADIUS},
-                }
-            );
-            remove_agent(id());
+
+            teleport(random_x, random_y, 0);
+
+            // Reset radius and counter
+            set_style({{"r", MAX_RADIUS}});
+            counter = 0;
+
+            hit = false;
+            // Agent& new_agent = add_agent(
+            //     "ShrinkingTarget",
+            //     random_x,
+            //     random_y,
+            //     0,
+            //     {
+            //         {"fill", "green"},
+            //         {"shape", "omni"},
+            //         {"r", MAX_RADIUS},
+            //     }
+            // );
+            // remove_agent(id());
         }
     }
     void stop() {}
