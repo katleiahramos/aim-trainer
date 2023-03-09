@@ -6,12 +6,18 @@
 using namespace enviro;
 
 class ShrinkingTargetController : public Process, public AgentInterface {
-    bool hit = false;
+
+    // Target Size
     int counter;
     int MAX_RADIUS = 50;
 
+    // GAME LOGIC VARIABLES
+    bool hit = false;
+    int total_hits;
+    int HITS_TO_SPAWN_WANDERER = 5;
+
     public:
-    ShrinkingTargetController() : Process(), AgentInterface(), counter(0) {}
+    ShrinkingTargetController() : Process(), AgentInterface(), counter(0), total_hits(0) {}
 
     void init() {
         watch("agent_click", [&](Event& e) {
@@ -40,6 +46,7 @@ class ShrinkingTargetController : public Process, public AgentInterface {
 
 
         if( hit ) {
+            total_hits++;
             int random_x = rand() % 801 - 400; 
             int random_y = rand() % 801 - 400; 
 
@@ -50,6 +57,14 @@ class ShrinkingTargetController : public Process, public AgentInterface {
             counter = 0;
 
             hit = false;
+
+            if ( total_hits == HITS_TO_SPAWN_WANDERER ) {
+              int random_x_wanderer = rand() % 801 - 400; 
+              int random_y_wanderer = rand() % 801 - 400; 
+              double random_theta = rand() % (4*3) - (2*3); // Use int rounded value for pi
+              add_agent("Wanderer",random_x_wanderer,random_y_wanderer,random_theta,{{"fill", "blue"}});
+              remove_agent(id());
+            }
             // Agent& new_agent = add_agent(
             //     "ShrinkingTarget",
             //     random_x,
