@@ -66,7 +66,8 @@ namespace {
         // GAME LOGIC VARIABLES
         bool hit = false;
         int total_hits = 0;
-        int HITS_TO_SPAWN_SHRINKING = 5;
+        int HITS_TILL_FASTER = 5;
+        int velocity = 10;
 
         public:
         WandererController() : StateMachine() {
@@ -98,22 +99,20 @@ namespace {
 
         void update() {
             damp_movement();
-            track_velocity(10,0.15);
+            track_velocity(velocity,0.15);
             if (hit) {
-                int random_x = rand() % 801 - 400; 
-                int random_y = rand() % 801 - 400; 
+                total_hits++;
+
+                int random_x = rand() % 701 - 350; 
+                int random_y = rand() % 701 - 350; 
                 double random_theta = rand() % (4*3) - (2*3); // Use int rounded value for Pi
-                 teleport(random_x, random_y, random_theta);
+                teleport(random_x, random_y, random_theta);
 
-                 hit = false;
-                
-                // Spawn a new block target and remove current target
-                // add_agent("Block",random_x,random_y,0,{{"fill", "blue"}});
-                // remove_agent(id());
+                hit = false;
 
-                // if (total_hits > HITS_TILL_NEXT_PHASE) {
-                //     add_agent("ShrinkingTarget",random_x,random_y,0,{{"fill", "blue"}});
-                // }
+                if (total_hits % 4 == 0) {
+                    velocity = velocity + 2;
+                }
             }
         }
 

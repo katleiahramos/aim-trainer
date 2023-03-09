@@ -10,11 +10,13 @@ class ShrinkingTargetController : public Process, public AgentInterface {
     // Target Size
     int counter;
     int MAX_RADIUS = 50;
+    int SMALLER_TARGET_RADIUS = 30;
 
     // GAME LOGIC VARIABLES
     bool hit = false;
     int total_hits;
-    int HITS_TO_SPAWN_WANDERER = 5;
+    int HITS_TO_SMALLER_TARGET = 5;
+    int HITS_TO_SPAWN_WANDERER = 10;
 
     public:
     ShrinkingTargetController() : Process(), AgentInterface(), counter(0), total_hits(0) {}
@@ -30,10 +32,6 @@ class ShrinkingTargetController : public Process, public AgentInterface {
     void start() {}
     void update() {
         damp_movement();
-        // Agent& target = find_agent(id());
-        // int new_radius =  (int) target.definition()["radius"] - 2;
-        // std::cout << "existing " << target.definition()["radius"] << "new_radius " << new_radius << "\n";
-
 
         // Shrink in size and remove
         if (counter > MAX_RADIUS ) {
@@ -43,19 +41,21 @@ class ShrinkingTargetController : public Process, public AgentInterface {
           counter++;
         }
 
-
-
         if( hit ) {
             total_hits++;
             int random_x = rand() % 801 - 400; 
             int random_y = rand() % 801 - 400; 
 
             teleport(random_x, random_y, 0);
+            set_style({{"r", MAX_RADIUS}});
+
+            // Increase difficulty 
+            if (total_hits > HITS_TO_SMALLER_TARGET ) {
+              MAX_RADIUS = SMALLER_TARGET_RADIUS;
+            }
 
             // Reset radius and counter
-            set_style({{"r", MAX_RADIUS}});
             counter = 0;
-
             hit = false;
 
             if ( total_hits == HITS_TO_SPAWN_WANDERER ) {
@@ -65,18 +65,6 @@ class ShrinkingTargetController : public Process, public AgentInterface {
               add_agent("Wanderer",random_x_wanderer,random_y_wanderer,random_theta,{{"fill", "blue"}});
               remove_agent(id());
             }
-            // Agent& new_agent = add_agent(
-            //     "ShrinkingTarget",
-            //     random_x,
-            //     random_y,
-            //     0,
-            //     {
-            //         {"fill", "green"},
-            //         {"shape", "omni"},
-            //         {"r", MAX_RADIUS},
-            //     }
-            // );
-            // remove_agent(id());
         }
     }
     void stop() {}

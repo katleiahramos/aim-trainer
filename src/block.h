@@ -10,7 +10,6 @@ class BlockController : public Process, public AgentInterface{
 
     // GAME LOGIC VARIABLES
     int total_hits;
-    int HITS_TO_SPAWN_WANDERER = 3;
     int HITS_TO_SPAWN_SHRINKING_TARGET = 5;
 
     public:
@@ -28,18 +27,16 @@ class BlockController : public Process, public AgentInterface{
     void update() {
         damp_movement();
 
-            // std::cout << "Total Hits: " << total_hits << "\n";
-
         if( hit ) {
             total_hits++;
-            
 
+            // Move target
             int random_x_block = rand() % 801 - 400; 
             int random_y_block = rand() % 801 - 400; 
             teleport(random_x_block, random_y_block, 0);
 
+            // Reset hit state
             hit = false;
-            // remove_agent(id());
 
             if ( total_hits == HITS_TO_SPAWN_SHRINKING_TARGET ) {
                 int random_x_wanderer = rand() % 801 - 400; 
@@ -47,19 +44,6 @@ class BlockController : public Process, public AgentInterface{
                 add_agent("ShrinkingTarget",random_x_wanderer,random_y_wanderer,0,{{"fill", "blue"}});
                 remove_agent(id());
             }
-
-            //  add_agent("Wanderer",random_x,random_y,0,{{"fill", "blue"}});
-
-            // if( total_hits == HITS_TILL_PHASE_1) {
-            //     add_agent("Wanderer",random_x,random_y,0,{{"fill", "blue"}});
-            // } else if (total_hits == HITS_TILL_PHASE_2) {
-            //     add_agent("Wanderer",random_x,random_y,0,{{"fill", "blue"}});
-            //     add_agent("ShrinkingAgent",random_x,random_y,0,{{"fill", "blue"}});
-            // } else {
-            //     add_agent("Block",random_x,random_y,0,{{"fill", "blue"}});
-            // }
-
-
         }
     }
     void stop() {}
