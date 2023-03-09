@@ -51,7 +51,8 @@ class ShrinkingTargetController : public Process, public AgentInterface {
                     {"fill", "green"},
                     {"shape", "omni"},
                     {"r", MAX_RADIUS},
-                });
+                }
+            );
             remove_agent(id());
         }
     }

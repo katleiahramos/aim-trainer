@@ -10,6 +10,17 @@ namespace {
 
     using namespace enviro;
 
+    class Waiting : public State, public AgentInterface {
+        public:
+        void entry(const Event& e) {
+        }
+        void during() { 
+        }
+        void exit(const Event& e) {}
+        void set_tick_name(std::string s) { tick_name = s; }
+        std::string tick_name;
+    };
+
     class InPlay : public State, public AgentInterface {
         public:
         void entry(const Event& e) {
@@ -26,7 +37,7 @@ namespace {
         public:
         void entry(const Event& e) { }
         void during() {  
-            emit(Event(tick_name));
+            // emit(Event(tick_name));
         }
         void exit(const Event& e) {
         }
@@ -46,21 +57,30 @@ namespace {
     };
 
     class WandererController : public StateMachine, public AgentInterface {
+        InPlay in_play;
+        Remove remove;
+        Destroyed destroyed;
+        Waiting waiting;
+        std::string tick_name;
+
+        // GAME LOGIC VARIABLES
         bool hit = false;
+        int total_hits = 0;
+        int HITS_TILL_NEXT_PHASE = 5;
 
         public:
         WandererController() : StateMachine() {
 
             set_initial(in_play);
-            tick_name = "tick_" + std::to_string(rand()%1000); // use an agent specific generated 
+            // tick_name = "tick_" + std::to_string(rand()%1000); // use an agent specific generated 
                                                                // event name in case there are 
-                                                               // multiple instances of this class
-            add_transition(tick_name, in_play, remove);
-            add_transition(tick_name, remove, destroyed);
-            in_play.set_tick_name(tick_name);
-            remove.set_tick_name(tick_name);
-            destroyed.set_tick_name(tick_name);
-
+            add_transition("switch", waiting, in_play);                                                   // multiple instances of this class
+            add_transition("other", in_play, remove);
+            add_transition("other", remove, destroyed);
+            in_play.set_tick_name("switch");
+            remove.set_tick_name("other");
+            destroyed.set_tick_name("other");
+            waiting.set_tick_name("switch");
         }
 
         void init() {
@@ -69,12 +89,11 @@ namespace {
 
                 int clicked_agent_id = e.value()["id"];
                 if ( id() ==  clicked_agent_id  ) {
-                    hit = true;
-                
+                    hit = true;                
                     // emit(Event(tick_name));
                 }
             });
-            StateMachine::init();
+            // StateMachine::init();
         }
 
         void update() {
@@ -83,15 +102,22 @@ namespace {
             if (hit) {
                 int random_x = rand() % 801 - 400; 
                 int random_y = rand() % 801 - 400; 
-                Agent& new_agent = add_agent("Block",random_x,random_y,0,{{"fill", "blue"}});
-                remove_agent(id());
+                double random_theta = rand() % (4*3) - (2*3); // Use int rounded value for Pi
+                 teleport(random_x, random_y, random_theta);
+
+                 hit = false;
+                
+                // Spawn a new block target and remove current target
+                // add_agent("Block",random_x,random_y,0,{{"fill", "blue"}});
+                // remove_agent(id());
+
+                // if (total_hits > HITS_TILL_NEXT_PHASE) {
+                //     add_agent("ShrinkingTarget",random_x,random_y,0,{{"fill", "blue"}});
+                // }
             }
         }
 
-        InPlay in_play;
-        Remove remove;
-        Destroyed destroyed;
-        std::string tick_name;
+
 
     };
 
