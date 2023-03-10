@@ -1,7 +1,7 @@
 {
     "name": "Coordinator",
     "type": "dynamic",
-    "description": "Replace this string with a description",
+    "description": "Invisible. Controller handles high level game logic",
     "shape": [
         { "x": -200, "y": 100 },
         { "x": 200, "y": 100 },

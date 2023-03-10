@@ -5,6 +5,12 @@
 
 using namespace enviro;
 
+/*
+Stationary square target
+total_hits - count the total number of times the block target has been hit
+
+Will spawn a shrinking target to start the next phase of the game.
+*/
 class BlockController : public Process, public AgentInterface{
     bool hit = false;
 
@@ -38,6 +44,7 @@ class BlockController : public Process, public AgentInterface{
             // Reset hit state
             hit = false;
 
+            // Handle moving to next game phase
             if ( total_hits == HITS_TO_SPAWN_SHRINKING_TARGET ) {
                 int random_x_wanderer = rand() % 801 - 400; 
                 int random_y_wanderer = rand() % 801 - 400; 

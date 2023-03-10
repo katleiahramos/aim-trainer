@@ -9,6 +9,15 @@
 
 using namespace enviro;
 
+/*
+Moving square target that gets faster over time 
+counter - used for calculating the new radius size to set on each update
+total_hits- count the total number of times the block target has been hit 
+
+Will continue to increase in velocity as the number of total target hits increases.
+
+If the moving target disappears the game will end.
+*/
 class WandererController : public Process, public AgentInterface {
 
     // GAME LOGIC VARIABLES
@@ -18,7 +27,7 @@ class WandererController : public Process, public AgentInterface {
     int velocity = 10;
 
     public:
-    WandererController() : Process(), AgentInterface() {}
+    WandererController() : Process(), AgentInterface(), total_hits(0) {}
 
     void init() {
         watch("agent_click", [&](Event& e) {
@@ -34,21 +43,21 @@ class WandererController : public Process, public AgentInterface {
     void start() {}
 
     void update() {
-        damp_movement();
         track_velocity(velocity,0.15);
 
+        // End game if target moves off screen
         if( x() > 400 || y() > 400 ) {
             std::cout << "GAME OVER \n";
             remove_agent(id());
 
             // Reset Button Logic
-            // add_agent(
-            //     "Coordinator",
-            //     100,
-            //     0,
-            //     0,
-            //     {{"fill", "grey"}}
-            // );
+            add_agent(
+                "Coordinator",
+                100,
+                0,
+                0,
+                {{"fill", "grey"}}
+            );
         } else if (hit) {
             total_hits++;
 
@@ -61,7 +70,6 @@ class WandererController : public Process, public AgentInterface {
 
             if (total_hits % 3 == 0) {
                 velocity = velocity + 2;
-                std::cout << "velocity :" << velocity << " \n";
             }
         }
     }

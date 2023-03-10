@@ -5,6 +5,15 @@
 
 using namespace enviro;
 
+/*
+Circular target that shrinks over time 
+counter - used for calculating the new radius size to set on each update
+total_hits- count the total number of times the block target has been hit 
+
+Will spawn a wanderer target to start the next phase of the game.
+
+If the shrinking target disappears the game will end.
+*/
 class ShrinkingTargetController : public Process, public AgentInterface {
 
     // Target Size
@@ -35,6 +44,14 @@ class ShrinkingTargetController : public Process, public AgentInterface {
 
         // Shrink in size and remove
         if (counter > MAX_RADIUS ) {
+          // Reset Button Logic
+          add_agent(
+              "Coordinator",
+              100,
+              0,
+              0,
+              {{"fill", "grey"}}
+          );
           std::cout << "GAME OVER \n";
           remove_agent(id());
         } else {
@@ -59,6 +76,7 @@ class ShrinkingTargetController : public Process, public AgentInterface {
             counter = 0;
             hit = false;
 
+            // Handle moving to next game phase
             if ( total_hits == HITS_TO_SPAWN_WANDERER ) {
               int random_x_wanderer = rand() % 801 - 400; 
               int random_y_wanderer = rand() % 801 - 400; 
