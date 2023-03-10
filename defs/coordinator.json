@@ -1,6 +1,19 @@
 {
     "name": "Coordinator",
-    "type": "invisible",
-    "description": "Runs the whole show, but isn't rendered",  
+    "type": "dynamic",
+    "description": "Replace this string with a description",
+    "shape": [
+        { "x": -200, "y": 100 },
+        { "x": 200, "y": 100 },
+        { "x": 200, "y": -100 },
+        { "x": -200, "y": -100 }
+    ],
+    "friction": {
+      "collision": 5,
+      "linear": 40,
+      "rotational": 600
+    },
+    "sensors": [],
+    "mass": 5,  
     "controller": "lib/coordinator.so"
 }
